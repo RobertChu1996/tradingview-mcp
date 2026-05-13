@@ -1,5 +1,40 @@
 # TradingView MCP — Claude Instructions
 
+Yvonne 的虛擬貨幣投資專案，包含兩個部分：
+1. **MCP Server** — 68 個工具，透過 CDP 讀取與控制 TradingView 桌面版圖表
+2. **交易機器人** (`claude-tradingview-mcp-trading/`) — 多策略自動交易機器人，部署在 Railway
+
+---
+
+## 交易機器人
+
+### 策略現況
+
+| 策略 | 邏輯 | 模式 |
+|------|------|------|
+| A：VWAP+RSI(3)+EMA [1H] | bot.js | 模擬盤 |
+| C：BB Breakout+ATR [1H] | bot_bb.js | 模擬盤 |
+| E：EMA Trend Pullback [1H] | bot_e.js | **真實 OKX 交易** ✅ |
+| K：Keltner Breakout [1H] | bot_k.js | 模擬盤 |
+| DN：Donchian Breakout [1D] | bot_dn.js | 模擬盤 |
+
+**只有策略 E 是真實金錢**，其餘策略 PnL 為模擬數字。
+
+### Railway 服務
+
+- URL: `claude-tradingview-mcp-trading-production-0a87.up.railway.app`
+- 端點：`/report`、`/positions`、`/positions_bb`、`/positions_e`、`/trades`、`/trades_bb`、`/trades_dmc`、`/trades_e`
+
+### 注意事項
+
+- `/report` 的 `mode` 欄位可能因舊 CSV 資料顯示錯誤，以 orderId 前綴（`E-PAPER-` vs `E-LIVE-`）為準
+- 每策略各自有獨立的 `PAPER_TRADING` 環境變數，不共用
+- 每15分鐘輪跑一次，每策略持倉上限4筆，日熔斷5%
+
+---
+
+## MCP Server
+
 68 tools for reading and controlling a live TradingView Desktop chart via CDP (port 9222).
 
 ## Decision Tree — Which Tool When
