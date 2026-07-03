@@ -1,11 +1,17 @@
 services:
   - type: web
-    name: sales-line-bot
-    runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    name: performance-line-bot
+    env: docker
     envVars:
-      - key: LINE_CHANNEL_ACCESS_TOKEN
+      - key: LINE_CHANNEL_ACCESS_TOKEN_A
         sync: false
-      - key: LINE_CHANNEL_SECRET
+      - key: LINE_CHANNEL_SECRET_A
         sync: false
+      - key: LINE_CHANNEL_ACCESS_TOKEN_B
+        sync: false
+      - key: LINE_CHANNEL_SECRET_B
+        sync: false
+      - key: LINE_GROUP_ID_B
+        sync: false
+      - key: BASE_URL
+        value: https://performance-line-bot.onrender.com
